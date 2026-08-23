@@ -23,6 +23,7 @@ public static class InactiveCustomerAlertEndpoints
         JOIN dbo.HH_Customer c
           ON c.BUID = r.BUID
          AND (r.ScopeSalesmanNo IS NULL OR c.SalesmanNo = r.ScopeSalesmanNo)
+         AND (r.ScopeCustomerNo IS NULL OR c.CustomerNo = r.ScopeCustomerNo)
         CROSS APPLY (
             SELECT MAX(o.OrderDate) AS LastOrderDate
             FROM dbo.HH_SalesOrder o

@@ -16,6 +16,9 @@ Packages/
 Thumbs.db
 desktop.ini
 
+# Claude Code runtime state
+.claude/scheduled_tasks.lock
+
 # Editors
 .vs/
 .vscode/*

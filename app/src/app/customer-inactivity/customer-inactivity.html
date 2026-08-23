@@ -165,6 +165,17 @@
           </label>
         </div>
       </div>
+      <div class="filter-bar" style="padding:12px 0 0;box-shadow:none;">
+        <div class="field field-grow">
+          <label>Apply to</label>
+          <select [(ngModel)]="form.scopeCustomerNo" name="scopeCustomerNo">
+            <option [ngValue]="null">All Customers</option>
+            @for (c of customers(); track c.customerNo) {
+              <option [ngValue]="c.customerNo">{{ customerLabel(c) }} ({{ c.customerNo }})</option>
+            }
+          </select>
+        </div>
+      </div>
       <div class="field-actions" style="margin-top:16px;">
         <button type="button" class="btn btn-primary" (click)="save()" [disabled]="rulesBusy()">Save</button>
         <button type="button" class="btn btn-outline" (click)="cancelEdit()" [disabled]="rulesBusy()">Cancel</button>
@@ -177,6 +188,7 @@
       <thead>
         <tr>
           <th>Rule Name</th>
+          <th>Scope</th>
           <th>Inactive Days</th>
           <th>Priority</th>
           <th>Status</th>
@@ -187,15 +199,22 @@
       </thead>
       <tbody>
         @if (rulesLoading()) {
-          <tr class="empty-row"><td colspan="7">Loading rules…</td></tr>
+          <tr class="empty-row"><td colspan="8">Loading rules…</td></tr>
         } @else if (rulesLoadError()) {
-          <tr class="empty-row"><td colspan="7">{{ rulesLoadError() }}</td></tr>
+          <tr class="empty-row"><td colspan="8">{{ rulesLoadError() }}</td></tr>
         } @else {
           @for (r of pagedRules(); track r.id) {
             <tr>
               <td>
                 <div class="cell-title">{{ r.ruleName }}</div>
                 <div class="cell-subtitle">{{ r.ruleCode }}{{ r.ruleNameA ? ' · ' + r.ruleNameA : '' }}</div>
+              </td>
+              <td>
+                @if (r.scopeCustomerNo) {
+                  <span class="badge badge-medium">{{ r.scopeCustomerName || r.scopeCustomerNo }}</span>
+                } @else {
+                  <span class="cell-subtitle">All Customers</span>
+                }
               </td>
               <td>{{ r.inactiveDays }}</td>
               <td><span class="badge" [class]="priorityBadgeClass(r.priority)">{{ priorityLabel(r.priority) }}</span></td>
@@ -211,7 +230,7 @@
               </td>
             </tr>
           } @empty {
-            <tr class="empty-row"><td colspan="7">No rules yet.</td></tr>
+            <tr class="empty-row"><td colspan="8">No rules yet.</td></tr>
           }
         }
       </tbody>

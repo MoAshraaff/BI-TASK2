@@ -33,6 +33,8 @@ interface InactiveCustomerAlertRule {
   createdBy: string | null;
   modifiedOn: string | null;
   modifiedBy: string | null;
+  scopeCustomerNo: string | null;
+  scopeCustomerName: string | null;
 }
 
 interface RuleFormModel {
@@ -42,6 +44,14 @@ interface RuleFormModel {
   inactiveDays: number;
   priority: RulePriority;
   isActive: boolean;
+  scopeCustomerNo: string | null;
+}
+
+interface CustomerOption {
+  customerNo: string;
+  customerNameE: string | null;
+  customerNameA: string | null;
+  inActive: number | null;
 }
 
 const PRIORITIES: { value: RulePriority; label: string }[] = [
@@ -59,7 +69,11 @@ function priorityBadgeClass(p: RulePriority): string {
 }
 
 function emptyForm(): RuleFormModel {
-  return { id: null, ruleName: '', ruleNameA: '', inactiveDays: 30, priority: 2, isActive: true };
+  return { id: null, ruleName: '', ruleNameA: '', inactiveDays: 30, priority: 2, isActive: true, scopeCustomerNo: null };
+}
+
+function customerLabel(c: CustomerOption): string {
+  return c.customerNameE ?? c.customerNameA ?? c.customerNo;
 }
 
 @Component({
@@ -72,14 +86,28 @@ export class CustomerInactivity {
   private readonly apiClient = inject(PublicApiClient);
   private readonly alertsApiUrl = `${API_BASE_URL}/api/inactive-customer-alerts`;
   private readonly rulesApiUrl = `${API_BASE_URL}/api/inactive-customer-alert-rules`;
+  private readonly customersApiUrl = `${API_BASE_URL}/api/customers`;
 
   protected readonly priorities = PRIORITIES;
   protected readonly priorityLabel = priorityLabel;
   protected readonly priorityBadgeClass = priorityBadgeClass;
+  protected readonly customerLabel = customerLabel;
 
   constructor() {
     this.refreshAlerts();
     this.refreshRules();
+    this.loadCustomers();
+  }
+
+  /* =========================================================== customers */
+
+  protected readonly customers = signal<CustomerOption[]>([]);
+
+  private loadCustomers(): void {
+    this.apiClient.get<CustomerOption[]>(this.customersApiUrl).subscribe({
+      next: (rows) => this.customers.set((rows ?? []).filter((c) => !c.inActive)),
+      error: () => this.customers.set([])
+    });
   }
 
   /* ============================================================== alerts */
@@ -240,7 +268,8 @@ export class CustomerInactivity {
       ruleNameA: rule.ruleNameA ?? '',
       inactiveDays: rule.inactiveDays,
       priority: rule.priority,
-      isActive: rule.isActive
+      isActive: rule.isActive,
+      scopeCustomerNo: rule.scopeCustomerNo
     });
   }
 
@@ -263,7 +292,8 @@ export class CustomerInactivity {
       ruleNameA: form.ruleNameA.trim() || null,
       inactiveDays: form.inactiveDays,
       priority: form.priority,
-      isActive: form.isActive
+      isActive: form.isActive,
+      scopeCustomerNo: form.scopeCustomerNo || null
     };
 
     this.rulesBusy.set(true);
@@ -314,7 +344,8 @@ export class CustomerInactivity {
       ruleNameA: rule.ruleNameA,
       inactiveDays: rule.inactiveDays,
       priority: rule.priority,
-      isActive: !rule.isActive
+      isActive: !rule.isActive,
+      scopeCustomerNo: rule.scopeCustomerNo
     };
     this.apiClient.put<InactiveCustomerAlertRule>(`${this.rulesApiUrl}/${rule.id}`, payload).subscribe({
       next: () => {

@@ -20,11 +20,13 @@ public static class InactiveCustomerAlertRuleEndpoints
     private const string DefaultNotifyTarget = "MANAGER";
 
     private const string SelectSql = """
-        SELECT RuleID AS Id, RuleCode, RuleName, RuleNameA,
-               CAST(ThresholdValue AS int) AS InactiveDays,
-               Severity, IsActive, LastRunOn, CreatedOn, Createdby AS CreatedBy, ModifiedOn, ModifiedBy
-        FROM dbo.HH_AlertRule
-        WHERE RuleType = @RuleType
+        SELECT ar.RuleID AS Id, ar.RuleCode, ar.RuleName, ar.RuleNameA,
+               CAST(ar.ThresholdValue AS int) AS InactiveDays,
+               ar.Severity, ar.IsActive, ar.LastRunOn, ar.CreatedOn, ar.Createdby AS CreatedBy, ar.ModifiedOn, ar.ModifiedBy,
+               ar.ScopeCustomerNo, sc.CustomerNameE AS ScopeCustomerName
+        FROM dbo.HH_AlertRule ar
+        LEFT JOIN dbo.HH_Customer sc ON sc.CustomerNo = ar.ScopeCustomerNo
+        WHERE ar.RuleType = @RuleType
         """;
 
     public static void MapInactiveCustomerAlertRuleEndpoints(this WebApplication app)
@@ -42,7 +44,7 @@ public static class InactiveCustomerAlertRuleEndpoints
     {
         var rows = await db.Database
             .SqlQueryRaw<InactiveCustomerAlertRuleRow>(
-                SelectSql + " ORDER BY RuleID",
+                SelectSql + " ORDER BY ar.RuleID",
                 new SqlParameter("@RuleType", RuleType))
             .ToListAsync(ct);
 
@@ -67,10 +69,10 @@ public static class InactiveCustomerAlertRuleEndpoints
 
         const string insertSql = """
             INSERT INTO dbo.HH_AlertRule
-                (RuleCode, RuleName, RuleNameA, RuleType, ThresholdValue, NotifyTarget, Severity, IsActive, BUID, CreatedOn, Createdby)
+                (RuleCode, RuleName, RuleNameA, RuleType, ThresholdValue, NotifyTarget, Severity, IsActive, BUID, CreatedOn, Createdby, ScopeCustomerNo)
             OUTPUT INSERTED.RuleID AS Value
             VALUES
-                (@RuleCode, @RuleName, @RuleNameA, @RuleType, @ThresholdValue, @NotifyTarget, @Severity, @IsActive, @BUID, GETDATE(), @CreatedBy)
+                (@RuleCode, @RuleName, @RuleNameA, @RuleType, @ThresholdValue, @NotifyTarget, @Severity, @IsActive, @BUID, GETDATE(), @CreatedBy, @ScopeCustomerNo)
             """;
 
         try
@@ -89,7 +91,8 @@ public static class InactiveCustomerAlertRuleEndpoints
                     new SqlParameter("@Severity", (byte)request.Priority),
                     new SqlParameter("@IsActive", (byte)(request.IsActive ? 1 : 0)),
                     new SqlParameter("@BUID", buid),
-                    new SqlParameter("@CreatedBy", createdBy))
+                    new SqlParameter("@CreatedBy", createdBy),
+                    new SqlParameter("@ScopeCustomerNo", (object?)NormalizeScope(request.ScopeCustomerNo) ?? DBNull.Value))
                 .ToListAsync(ct);
             var newId = insertedIds.Single();
 
@@ -119,7 +122,8 @@ public static class InactiveCustomerAlertRuleEndpoints
                 Severity = @Severity,
                 IsActive = @IsActive,
                 ModifiedOn = GETDATE(),
-                ModifiedBy = @ModifiedBy
+                ModifiedBy = @ModifiedBy,
+                ScopeCustomerNo = @ScopeCustomerNo
             WHERE RuleID = @Id AND RuleType = @RuleType
             """;
 
@@ -132,7 +136,8 @@ public static class InactiveCustomerAlertRuleEndpoints
                 new SqlParameter("@IsActive", (byte)(request.IsActive ? 1 : 0)),
                 new SqlParameter("@ModifiedBy", modifiedBy),
                 new SqlParameter("@Id", id),
-                new SqlParameter("@RuleType", RuleType)
+                new SqlParameter("@RuleType", RuleType),
+                new SqlParameter("@ScopeCustomerNo", (object?)NormalizeScope(request.ScopeCustomerNo) ?? DBNull.Value)
             ], ct);
 
         if (affected == 0)
@@ -161,7 +166,7 @@ public static class InactiveCustomerAlertRuleEndpoints
     private static Task<InactiveCustomerAlertRuleRow?> FindRowAsync(AppDbContext db, int id, CancellationToken ct) =>
         db.Database
             .SqlQueryRaw<InactiveCustomerAlertRuleRow>(
-                SelectSql + " AND RuleID = @Id",
+                SelectSql + " AND ar.RuleID = @Id",
                 new SqlParameter("@RuleType", RuleType), new SqlParameter("@Id", id))
             .SingleOrDefaultAsync(ct);
 
@@ -193,6 +198,10 @@ public static class InactiveCustomerAlertRuleEndpoints
         return $"{slug}-{suffix}";
     }
 
+    // Empty string from the "All Customers" option should mean unscoped, same as null.
+    private static string? NormalizeScope(string? scopeCustomerNo) =>
+        string.IsNullOrWhiteSpace(scopeCustomerNo) ? null : scopeCustomerNo.Trim();
+
     private static bool TryValidate(InactiveCustomerAlertRuleRequest request, out IDictionary<string, string[]> errors)
     {
         var e = new Dictionary<string, string[]>();
@@ -212,6 +221,10 @@ public static class InactiveCustomerAlertRuleEndpoints
 
         if (!Enum.IsDefined(request.Priority))
             e["priority"] = ["Priority must be Low, Medium, or High."];
+
+        // ScopeCustomerNo is nvarchar(30) - i.e. 30 characters.
+        if (NormalizeScope(request.ScopeCustomerNo) is { Length: > 30 })
+            e["scopeCustomerNo"] = ["Customer number must be 30 characters or fewer."];
 
         errors = e;
         return e.Count == 0;

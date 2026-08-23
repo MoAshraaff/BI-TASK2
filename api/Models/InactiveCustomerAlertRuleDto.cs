@@ -14,6 +14,8 @@ public class InactiveCustomerAlertRuleDto
     public string? CreatedBy { get; set; }
     public DateTime? ModifiedOn { get; set; }
     public string? ModifiedBy { get; set; }
+    public string? ScopeCustomerNo { get; set; }
+    public string? ScopeCustomerName { get; set; }
 
     public static InactiveCustomerAlertRuleDto FromRow(InactiveCustomerAlertRuleRow row) => new()
     {
@@ -28,6 +30,8 @@ public class InactiveCustomerAlertRuleDto
         CreatedOn = row.CreatedOn,
         CreatedBy = row.CreatedBy,
         ModifiedOn = row.ModifiedOn,
-        ModifiedBy = row.ModifiedBy
+        ModifiedBy = row.ModifiedBy,
+        ScopeCustomerNo = row.ScopeCustomerNo,
+        ScopeCustomerName = row.ScopeCustomerName
     };
 }
