@@ -1,0 +1,12 @@
+<!-- REVERT NOTE: to go back to the two separate pages, replace this single
+     link with the two commented below, and change app.routes.ts's '' redirect
+     back to 'inactive-customer-alert-rules'. The old components/routes are
+     untouched and still work either way.
+<a routerLink="/inactive-customer-alert-rules" routerLinkActive="active" class="btn btn-primary">Inactive Customer Alert Rules</a>
+<a routerLink="/inactive-customer-alerts" routerLinkActive="active" class="btn btn-primary">Inactive Customer Alerts</a>
+-->
+<nav class="app-nav">
+  <a routerLink="/customer-inactivity" routerLinkActive="active" class="btn btn-primary">Customer Inactivity</a>
+</nav>
+
+<router-outlet />

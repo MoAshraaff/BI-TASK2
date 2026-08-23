@@ -1,0 +1,14 @@
+.app-nav {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.25rem 2rem 0;
+  font-family: var(--font-sans);
+
+  a {
+    text-decoration: none;
+
+    &.active {
+      background: var(--btn-primary-hover);
+    }
+  }
+}

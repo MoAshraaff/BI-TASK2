@@ -1,0 +1,25 @@
+# Frontend (Angular)
+app/node_modules/
+app/dist/
+app/.angular/
+
+# Backend (.NET)
+api/bin/
+api/obj/
+
+# Proprietary SalesBuzz SDK packages - supplied out-of-band, not for public
+# distribution. See CLAUDE.md for how to obtain these on a fresh checkout.
+Packages/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
