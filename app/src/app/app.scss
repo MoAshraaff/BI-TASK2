@@ -1,12 +1,16 @@
 .app-shell {
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   min-height: 100vh;
 }
 
 .app-sidebar {
+  position: sticky;
+  top: 0;
   flex: 0 0 232px;
   width: 232px;
+  height: 100vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 6px;
