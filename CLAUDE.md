@@ -35,6 +35,24 @@ dotnet run              # http://localhost:5228
 - Schema/seed data came from a SalesBuzz-provided `SDK_Minimal_Schema.sql` init script (32 tables + `Get_AuditCriteria` proc + seed rows: BU `C100`, users `demo`/`admin`, roles `user`/`admin`). Re-run that script (with `USE [MO_ASHRAF];`) against a fresh database if you need to reset it — it's idempotent (`IF NOT EXISTS` guards throughout).
 - Connection string lives in `api/appsettings.json` under `ConnectionStrings:DefaultConnection`.
 
+### Docker
+Runs `app/` + `api/` as containers; SQL Server itself is **not** containerized and stays as the existing local instance (Windows containers can't do the Windows-Integrated auth the native connection string uses, so this needs its own path in anyway).
+
+One-time host setup (do this yourself — not run by Claude, since it touches DB security principals):
+1. Copy `.env.example` to `.env` and fill in `DB_PASSWORD` (already done for this checkout — `.env` is gitignored, never commit it).
+2. `sqlcmd -S localhost -E -v DbPassword="<same value as DB_PASSWORD in .env>" -i docker-db-setup.sql` — creates a `bi_task2_docker` SQL login scoped to `MO_ASHRAF` only (`db_owner` on that database, nothing else, password passed in rather than hardcoded in the committed script).
+
+No Windows Firewall change is needed — despite no explicit inbound rule for TCP 1433, the container already reaches the host's SQL Server over `host.docker.internal:1433` fine (verified: it gets back SQL error 18456 "login failed" rather than a connection timeout, i.e. the network path works, only the login was missing).
+
+Then:
+```bash
+docker compose up --build
+```
+- `api` → http://localhost:5228 (published from the container's port 8080)
+- `app` → http://localhost:4200 (nginx serving the Angular production build)
+
+`api/Dockerfile` and `app/Dockerfile` both use the **repo root** as their build context (not `api/`/`app/`) so they can reach the sibling `Packages/` folder — see docker-compose.yml's `context: .`. `api/NuGet.Config` mirrors the machine-level `local-bi-sdk` NuGet source as a relative, repo-local path so `dotnet restore` works inside the build without that machine-level config.
+
 ## Architecture
 
 ### Package provenance — read this before adding dependencies

@@ -11,6 +11,9 @@ api/obj/
 # distribution. See CLAUDE.md for how to obtain these on a fresh checkout.
 Packages/
 
+# Docker env (holds the local SQL login password)
+.env
+
 # OS
 .DS_Store
 Thumbs.db

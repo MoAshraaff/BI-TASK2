@@ -1,0 +1,29 @@
+# Explicit project name: the default (derived from the folder name "BI-TASK2")
+# collides with an unrelated project at C:\Projects\BI-TASK2 that has its own
+# docker-compose.yml with the same default name - this keeps the two apart.
+name: bi-task2-inactive-customer-alerts
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "5228:8080"
+    environment:
+      # SQL Server itself stays on the host (not containerized) - the
+      # container reaches it over TCP via host.docker.internal using the
+      # bi_task2_docker SQL login, since Windows Integrated auth isn't
+      # available from inside a Linux container.
+      ConnectionStrings__DefaultConnection: "Server=host.docker.internal,1433;Database=MO_ASHRAF;User Id=bi_task2_docker;Password=${DB_PASSWORD};TrustServerCertificate=True;"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
