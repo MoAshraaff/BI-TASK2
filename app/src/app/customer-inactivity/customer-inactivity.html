@@ -66,13 +66,12 @@
           <th>Inactive Days</th>
           <th>Applied Rule</th>
           <th>Priority</th>
-          <th>Status</th>
           <th class="cell-actions">Actions</th>
         </tr>
       </thead>
       <tbody>
         @if (alertsLoading()) {
-          <tr class="empty-row"><td colspan="8">Loading alerts…</td></tr>
+          <tr class="empty-row"><td colspan="7">Loading alerts…</td></tr>
         } @else {
           @for (a of pagedAlerts(); track alertKey(a)) {
             <tr>
@@ -88,7 +87,6 @@
                 <div class="cell-subtitle">Threshold: {{ a.inactiveDaysThreshold }} days</div>
               </td>
               <td><span class="badge" [class]="priorityBadgeClass(a.priority)">{{ priorityLabel(a.priority) }}</span></td>
-              <td><span class="badge badge-active">Open</span></td>
               <td class="cell-actions">
                 <button type="button" class="btn btn-sm btn-outline" (click)="toggleAlertDetail(a)">View</button>
                 @if (contactHref(a); as href) {
@@ -98,7 +96,7 @@
             </tr>
             @if (expandedAlertKey() === alertKey(a)) {
               <tr class="detail-row">
-                <td colspan="8">
+                <td colspan="7">
                   <strong>Rule code:</strong> {{ a.ruleCode }}
                   &nbsp;&middot;&nbsp;
                   <strong>Mobile:</strong> {{ a.mobile || 'Not on file' }}
@@ -106,7 +104,7 @@
               </tr>
             }
           } @empty {
-            <tr class="empty-row"><td colspan="8">No customers currently exceed an active rule.</td></tr>
+            <tr class="empty-row"><td colspan="7">No customers currently exceed an active rule.</td></tr>
           }
         }
       </tbody>
