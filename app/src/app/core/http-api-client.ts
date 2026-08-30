@@ -3,9 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PublicApiClient, PublicApiRequestOptions } from '@salesbuzz/public-sdk';
 
-// The @salesbuzz/public-sdk package ships PublicApiClient as an abstract DI
-// token - this is the concrete HttpClient-backed implementation every screen
-// injects it through, so there is one API communication path in the app.
 @Injectable({ providedIn: 'root' })
 export class HttpApiClient implements PublicApiClient {
   private readonly http = inject(HttpClient);

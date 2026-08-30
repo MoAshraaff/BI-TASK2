@@ -45,7 +45,8 @@ app.MapGet("/api/customers", async (AppDbContext db) =>
         .ToListAsync())
     .WithName("GetCustomers");
 
-app.MapInactiveCustomerAlertRuleEndpoints();
-app.MapInactiveCustomerAlertEndpoints();
+// Smart Customer Alert Rules - rule CRUD, the evaluation engine, and the
+// generated alerts. Grouped in api/Endpoints/AlertEndpoints.cs.
+app.MapAlertEndpoints();
 
 app.Run();

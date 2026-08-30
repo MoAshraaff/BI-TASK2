@@ -1,19 +1,28 @@
-# Build context is the repo root (not api/) so this can reach the sibling
-# Packages/nuget/ folder that api.csproj's local-bi-sdk NuGet source needs.
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+# Dev-mode image: runs `dotnet watch`, not a production build. api/ is
+# bind-mounted over this at runtime (see docker-compose.yml), so this
+# COPY + restore only warms a cache layer - the code that actually runs is
+# whatever is on disk on the host, live.
+FROM mcr.microsoft.com/dotnet/sdk:10.0
+
 WORKDIR /src
 
-COPY Packages/nuget/ Packages/nuget/
-COPY api/NuGet.Config api/api.csproj api/
-RUN dotnet restore api/api.csproj
+# nuget.config and Packages/nuget copied before the csproj so `dotnet
+# restore` can resolve BI-SDK - it is not on nuget.org, only in this repo.
+COPY nuget.config .
+COPY Packages/nuget ./Packages/nuget
+COPY api/api.csproj ./api/
+RUN dotnet restore ./api/api.csproj
 
-COPY api/ api/
-RUN dotnet publish api/api.csproj -c Release -o /app/publish --no-restore
+COPY api ./api
+WORKDIR /src/api
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
-WORKDIR /app
-COPY --from=build /app/publish .
+ENV ASPNETCORE_URLS=http://+:5228 \
+    ASPNETCORE_ENVIRONMENT=Development \
+    DOTNET_USE_POLLING_FILE_WATCHER=true
+# Polling is required for dotnet watch to see changes written through a
+# Docker Desktop bind mount on Windows - inotify events do not cross that
+# boundary reliably.
 
-ENV ASPNETCORE_URLS=http://+:8080
-EXPOSE 8080
-ENTRYPOINT ["dotnet", "api.dll"]
+EXPOSE 5228
+
+CMD ["dotnet", "watch", "run", "--no-launch-profile", "--non-interactive"]

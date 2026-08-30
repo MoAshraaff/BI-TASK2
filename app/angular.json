@@ -22,7 +22,8 @@
           "options": {
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -33,6 +34,8 @@
               }
             ],
             "styles": [
+              "node_modules/@progress/kendo-theme-default/dist/all.css",
+              "node_modules/bi-modules/styles/bi-theme.css",
               "src/styles.scss"
             ]
           },
@@ -41,8 +44,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4MB",
-                  "maximumError": "6MB"
+                  "maximumWarning": "7MB",
+                  "maximumError": "9MB"
                 },
                 {
                   "type": "anyComponentStyle",

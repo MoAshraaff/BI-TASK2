@@ -1,0 +1,16 @@
+<svg id="General_Ledger" data-name="General Ledger" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+  <g id="Layer_2" data-name="Layer 2" transform="translate(-1 2)">
+    <path id="Path_4713" data-name="Path 4713" d="M29,19.593a1.441,1.441,0,0,1,.576,1.153v4.9h2.017V17H29Z" transform="translate(-16.373 -10.678)" fill="#c0401a"/>
+    <path id="Path_4714" data-name="Path 4714" d="M29,11h2.593v1.153H29Z" transform="translate(-16.373 -6.407)" fill="#c0401a"/>
+    <path id="Path_4715" data-name="Path 4715" d="M23,11h1.153v1.153H23Z" transform="translate(-12.102 -6.407)" fill="#c0401a"/>
+    <path id="Path_4716" data-name="Path 4716" d="M40,17h2.593v8.644H40Z" transform="translate(-24.203 -10.678)" fill="#c0401a"/>
+    <path id="Path_4717" data-name="Path 4717" d="M40,11h2.593v1.153H40Z" transform="translate(-24.203 -6.407)" fill="#c0401a"/>
+    <path id="Path_4718" data-name="Path 4718" d="M23,19.305h.864a1.357,1.357,0,0,1,.288.029V17H23Z" transform="translate(-12.102 -10.678)" fill="#c0401a"/>
+    <path id="Path_4719" data-name="Path 4719" d="M25.661,2h-9.22A1.441,1.441,0,0,0,15,3.441V8.627h1.729V4.305a.288.288,0,0,1,.288-.288h8.068a.288.288,0,0,1,.288.288V15.254a.288.288,0,0,1-.288.288H19.61v.576a1.441,1.441,0,0,1-1.441,1.441H15A1.441,1.441,0,0,0,16.441,19h9.22A1.441,1.441,0,0,0,27.1,17.559V3.441A1.441,1.441,0,0,0,25.661,2Zm-.576,14.695h-4.9v-.576h4.9Z" transform="translate(-6.407)" fill="#c0401a"/>
+    <path id="Path_4720" data-name="Path 4720" d="M12.627,33.915V27.864A.864.864,0,0,0,11.763,27h-4.9A.864.864,0,0,0,6,27.864v6.051a.864.864,0,0,0,.864.864h4.9A.864.864,0,0,0,12.627,33.915Zm-4.322-.288H7.441v-.576h.864Zm0-1.153H7.441V31.9h.864Zm0-1.153H7.441v-.576h.864Zm1.441,2.305H8.881v-.576h.864Zm0-1.153H8.881V31.9h.864Zm0-1.153H8.881v-.576h.864Zm1.441,2.305h-.864v-.576h.864Zm0-1.153h-.864V31.9h.864Zm0-1.153h-.864v-.576h.864Zm.288-1.441a.291.291,0,0,1-.288.288H7.441a.288.288,0,0,1-.288-.288V28.441a.176.176,0,0,1,0-.04.288.288,0,0,1,.288-.248h3.746a.286.286,0,0,1,.288.288Z" transform="translate(0 -17.797)" fill="#c0401a"/>
+  </g>
+  <g id="Group_6886" data-name="Group 6886" transform="translate(18703 6286)">
+    <rect id="Rectangle_3126" data-name="Rectangle 3126" width="20" height="20" transform="translate(-18703 -6286)" fill="none"/>
+    <rect id="Rectangle_3127" data-name="Rectangle 3127" width="18" height="18" transform="translate(-18700 -6283)" fill="none"/>
+  </g>
+</svg>

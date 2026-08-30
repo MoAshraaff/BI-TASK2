@@ -1,12 +1,11 @@
-# Build context here is the repo root (see docker-compose.yml's `context: .`),
-# so this is the only .dockerignore Docker actually reads - per-subfolder
-# .dockerignore files are silently ignored by the default build context.
-app/node_modules/
-app/dist/
-app/.angular/
-
-api/bin/
-api/obj/
-
-Packages/nuget/*.nuspec
-.git/
+# Build context is the repo root for both api/ and app/ images (see
+# docker-compose.yml), so this one file covers both. Everything here is
+# either huge, platform-specific, or something the container builds itself.
+**/node_modules
+**/.angular
+**/dist
+**/bin
+**/obj
+**/*.user
+.git
+.claude

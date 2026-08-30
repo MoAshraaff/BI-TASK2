@@ -1,0 +1,12 @@
+<svg id="Inventory_Management" data-name="Inventory Management" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+  <g id="warehouse" transform="translate(4 4)">
+    <path id="Path_4675" data-name="Path 4675" d="M16.771,5.583,8.8.093a.533.533,0,0,0-.6,0L.23,5.583A.53.53,0,0,0,0,6.021V16.292A.709.709,0,0,0,.708,17H2.125V8.5a.709.709,0,0,1,.708-.708H14.167a.709.709,0,0,1,.708.708V17h1.417A.709.709,0,0,0,17,16.292V6.021A.531.531,0,0,0,16.771,5.583Z" transform="translate(0 0)" fill="#c0401a"/>
+    <path id="Path_4676" data-name="Path 4676" d="M8.156,19v.531a.531.531,0,1,1-1.062,0V19H5.854a.354.354,0,0,0-.354.354v2.833a.354.354,0,0,0,.354.354H9.4a.354.354,0,0,0,.354-.354V19.354A.354.354,0,0,0,9.4,19Z" transform="translate(-1.604 -5.542)" fill="#c0401a"/>
+    <path id="Path_4677" data-name="Path 4677" d="M15.156,19v.531a.531.531,0,1,1-1.062,0V19h-1.24a.354.354,0,0,0-.354.354v2.833a.354.354,0,0,0,.354.354H16.4a.354.354,0,0,0,.354-.354V19.354A.354.354,0,0,0,16.4,19Z" transform="translate(-3.646 -5.542)" fill="#c0401a"/>
+    <path id="Path_4678" data-name="Path 4678" d="M11.656,13v.531a.531.531,0,0,1-1.062,0V13H9.354A.354.354,0,0,0,9,13.354v2.833a.354.354,0,0,0,.354.354H12.9a.354.354,0,0,0,.354-.354V13.354A.354.354,0,0,0,12.9,13Z" transform="translate(-2.625 -3.792)" fill="#c0401a"/>
+  </g>
+  <g id="Group_6887" data-name="Group 6887" transform="translate(18734 6286)">
+    <rect id="Rectangle_3116" data-name="Rectangle 3116" width="20" height="20" transform="translate(-18734 -6286)" fill="none"/>
+    <rect id="Rectangle_3119" data-name="Rectangle 3119" width="18" height="18" transform="translate(-18731 -6283)" fill="none"/>
+  </g>
+</svg>

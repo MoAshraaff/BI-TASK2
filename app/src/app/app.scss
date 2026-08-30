@@ -1,128 +1,19 @@
+/* Bi-Sidebar (bi-modules) is internally `position:sticky; height:100vh`, so
+   it only behaves correctly as a flex sibling of the routed content. */
 .app-shell {
   display: flex;
   align-items: flex-start;
   min-height: 100vh;
 }
 
-.app-sidebar {
-  position: sticky;
-  top: 0;
-  flex: 0 0 232px;
-  width: 232px;
-  height: 100vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 20px 14px;
-  background: var(--btn-primary-bg);
-  font-family: var(--font-sans);
-}
-
-.app-sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 8px 18px;
-  color: #fff;
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
-}
-
-.app-sidebar-brand-mark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--btn-primary-hover);
-  font-size: 0.85rem;
-}
-
-.app-sidebar-nav {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.app-sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 0.87rem;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: default;
-  user-select: none;
-}
-
-.app-sidebar-icon {
-  width: 17px;
-  height: 17px;
-  flex: none;
-}
-
-.app-sidebar-link {
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.06);
-  }
-
-  &.active {
-    background: var(--btn-primary-hover);
-    color: #fff;
-  }
-}
-
-.app-sidebar-footer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-  padding: 12px 8px 4px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.app-sidebar-avatar {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  background: var(--btn-primary-hover);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.app-sidebar-footer-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.25;
-}
-
-.app-sidebar-footer-name {
-  color: #fff;
-  font-size: 0.84rem;
-  font-weight: 600;
-}
-
-.app-sidebar-footer-role {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.72rem;
-}
-
 .app-content {
   flex: 1;
   min-width: 0;
+}
+
+/* Bi-Sidebar's menu icons are plain <img> tags using their own SVGs' native
+   colors - forcing them white matches the reference screenshot regardless of
+   what color each source icon actually ships with. */
+::ng-deep .k-drawer-item img {
+  filter: brightness(0) invert(1);
 }

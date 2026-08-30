@@ -1,0 +1,35 @@
+/* Page-specific layout only - shared card/table/button styles live in
+   src/styles.scss so every screen stays visually consistent. */
+.section-title {
+  margin-top: 6px;
+}
+
+.selection-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  font-size: 0.85rem;
+}
+
+/* BI-Grid renders full-bleed by default; give it the same card treatment as
+   the rest of the page instead of a bare table sitting on the page background. */
+BI-Grid {
+  display: block;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* Neither grid on this page uses column filtering, so the column-customization
+   ("gear") toggle has nothing to configure - BIGridComponent renders it
+   unconditionally with no Input to hide it, so it's removed here instead. */
+.no-chooser-grid {
+  ::ng-deep .custom-grid {
+    display: none;
+  }
+}

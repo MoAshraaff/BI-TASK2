@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28.95" height="28.95" viewBox="0 0 31.95 31.95">
+  <g id="delet" transform="translate(-1126.05 -133)">
+    <rect id="Rectangle_2458" data-name="Rectangle 2458" width="31.95" height="31.95" rx="6" transform="translate(1126.05 133)" fill="none"/>
+    <g id="delete_outline_black_24dp" transform="translate(1130 137)">
+      <path id="Path_4288" data-name="Path 4288" d="M0,0H24V24H0Z" fill="none"/>
+      <path id="Path_4289" data-name="Path 4289" d="M6,19a2.006,2.006,0,0,0,2,2h8a2.006,2.006,0,0,0,2-2V7H6ZM8,9h8V19H8Zm7.5-5-1-1h-5l-1,1H5V6H19V4Z" fill="#c0401a"/>
+    </g>
+  </g>
+</svg>

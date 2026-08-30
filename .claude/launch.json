@@ -4,7 +4,7 @@
     {
       "name": "bi-app",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start", "--prefix", "C:\\Users\\moham\\OneDrive\\Desktop\\BI-TASK2\\app"],
+      "runtimeArgs": ["run", "start", "--prefix", "app"],
       "port": 4200
     }
   ]

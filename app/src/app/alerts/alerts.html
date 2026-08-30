@@ -1,0 +1,68 @@
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h1>Alerts &amp; Alert Rules</h1>
+      <p class="page-subtitle">Customers who need follow-up right now, and the rules that decide when an alert fires.</p>
+    </div>
+  </div>
+
+  <!-- ======================================================== ALERTS ==== -->
+  <h2 class="section-title">Alerts</h2>
+
+  @if (selectedAlert(); as row) {
+    <div class="selection-bar">
+      <span>{{ row.customerName || row.customerNo }}</span>
+      <button type="button" kendoButton fillMode="outline" (click)="setAlertStatus(2)" [disabled]="row.status >= 2">Acknowledge</button>
+      <button type="button" kendoButton fillMode="outline" (click)="setAlertStatus(3)" [disabled]="row.status >= 3">Resolve</button>
+    </div>
+  }
+
+  <div class="no-chooser-grid">
+    <BI-Grid
+      #alertsGrid
+      [DataService]="alertsDataSource"
+      [changeSet]="alertsChangeSet"
+      [Columns]="alertColumns"
+      (CellClick)="onAlertCellClick($event)"
+      (OnLoadData)="alertsGrid.Mygrid?.closeCell()"
+      GridName="Alerts"
+      DomID="alerts-grid"
+      [HasPaging]="true"
+      [HasFullHeight]="true"
+      [height]="alertsGridHeight()">
+    </BI-Grid>
+  </div>
+
+  <!-- ==================================================== ALERT RULES ==== -->
+  @if (rulesError(); as message) {
+    <div class="notice error">{{ message }}</div>
+  }
+
+  <BI-Nav
+    [BIGrid]="rulesGrid"
+    PageTitle="Alert Rules"
+    [RowTitle]="rulesRowTitle()"
+    [CanInsert]="true"
+    [CanUpdate]="true"
+    [CanDelete]="true"
+    [CanSave]="true"
+    [deleteConfirmMsg]="true"
+    [navButtons]="navButtons">
+  </BI-Nav>
+
+  <div class="no-chooser-grid">
+    <BI-Grid
+      #rulesGrid
+      [DataService]="rulesDataSource"
+      [changeSet]="rulesChangeSet"
+      [Columns]="ruleColumns"
+      (CellClick)="onRulesCellClick($event)"
+      (OnLoadData)="rulesGrid.Mygrid?.closeCell()"
+      GridName="AlertRules"
+      DomID="alert-rules-grid"
+      [HasPaging]="true"
+      [HasFullHeight]="true"
+      [height]="rulesGridHeight()">
+    </BI-Grid>
+  </div>
+</div>

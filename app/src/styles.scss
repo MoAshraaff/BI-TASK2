@@ -1,6 +1,6 @@
 /* ============================================================================
    Design tokens + shared page/table/button classes, used by every screen.
-   One system so every screen looks like one product, not several different ones.
+   One system so every screen looks like one product, not four different ones.
    ============================================================================ */
 
 :root {
@@ -47,9 +47,14 @@
   box-sizing: border-box;
 }
 
+/* bi-theme.css (bi-modules) hardcodes `overflow-y: hidden` on html/body, which
+   blocks normal page scrolling everywhere. Override it back so pages taller
+   than the viewport can scroll. */
 html,
 body {
   height: 100%;
+  min-height: 100%;
+  overflow-y: auto;
 }
 
 body {
@@ -58,7 +63,6 @@ body {
   background: var(--page-bg);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
-  zoom: 1.15;
 }
 
 /* ---------------------------------------------------------------- layout */
@@ -93,19 +97,19 @@ body {
   }
 }
 
-.section-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 4px;
-}
-
 .section-title {
   font-size: 1.1rem;
   font-weight: 700;
-  margin: 0;
+  margin: 4px 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+
+  .section-subtitle {
+    font-weight: 400;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
 }
 
 /* ------------------------------------------------------------ stat cards */
@@ -140,6 +144,7 @@ body {
   }
 
   &.stat-danger .stat-value { color: var(--btn-danger-text); }
+  &.stat-money .stat-value { color: #b25e09; }
 }
 
 /* ------------------------------------------------------------------ card */
@@ -244,18 +249,15 @@ body {
   &:hover:not(:disabled) { background: var(--btn-danger-hover); }
 }
 
+.btn-success-soft {
+  background: var(--btn-success-bg);
+  color: var(--btn-success-text);
+  &:hover:not(:disabled) { background: var(--btn-success-hover); }
+}
+
 .btn-sm {
   padding: 6px 12px;
   font-size: 0.8rem;
-}
-
-/* ------------------------------------------------------------ pagination */
-
-.pagination {
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  margin-top: -10px;
 }
 
 /* --------------------------------------------------------------- table */
@@ -333,8 +335,6 @@ body {
   &.badge-high { background: var(--severity-high-bg); color: var(--severity-high-text); }
   &.badge-medium { background: var(--severity-medium-bg); color: var(--severity-medium-text); }
   &.badge-low { background: var(--severity-low-bg); color: var(--severity-low-text); }
-  &.badge-active { background: var(--btn-success-bg); color: var(--btn-success-text); }
-  &.badge-inactive { background: var(--severity-low-bg); color: var(--text-tertiary); }
 }
 
 /* ---------------------------------------------------------------- notice */
@@ -351,4 +351,19 @@ body {
     background: var(--btn-danger-bg);
     color: var(--btn-danger-text);
   }
+}
+
+/* ------------------------------------------------------ vendor CSS fixes */
+
+/* bi-theme.css (bi-modules) ships a corrupted `content` value on this
+   pseudo-element - mojibake baked into the package itself, not a translation
+   or rendering issue on our end. `width:0;overflow:hidden` shows it was meant
+   to be invisible (a zero-width space, most likely), but the garbled
+   multi-character fallback still bleeds out visibly in every Kendo dropdown
+   list (e.g. the Scope/Priority editors on the Alert Rules grid). Loading
+   after bi-theme.css lets this win the cascade without patching node_modules. */
+.k-list-item-text::before,
+.k-list-header-text::before,
+.k-list-optionlabel::before {
+  content: "";
 }

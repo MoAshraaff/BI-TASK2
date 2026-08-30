@@ -1,29 +1,137 @@
-# Explicit project name: the default (derived from the folder name "BI-TASK2")
-# collides with an unrelated project at C:\Projects\BI-TASK2 that has its own
-# docker-compose.yml with the same default name - this keeps the two apart.
-name: bi-task2-inactive-customer-alerts
+name: bi-task2
 
 services:
+  # SQL Server itself. Windows Authentication (what appsettings.json's
+  # DefaultConnection uses for the host-native dev workflow) does not apply
+  # inside a Linux container, so this database is reached with SQL auth
+  # instead - see the `api` service's connection-string override below.
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    ports:
+      # Host 1434, NOT 1433: this machine already runs a native SQL Server on
+      # 1433 holding unrelated databases. Publishing to 1433 leaves two
+      # listeners on the same port and makes "localhost:1433" ambiguous - a
+      # good way to run a script against the wrong instance. Connect SSMS to
+      # localhost,1434 (user sa) to browse the container's copy.
+      - "1434:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1' -b -o /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  # One-shot: creates MO_ASHRAF and applies db/01-03 in order, then exits.
+  # Every script is idempotent, so this is safe to run on every `compose up`,
+  # not just the first one - a fresh dataset is one `docker compose up` away.
+  db-init:
+    # Reuses the server image rather than a separate tools image: it already
+    # ships sqlcmd, and there is no mssql-tools18 image published on MCR.
+    # Same image = no extra pull.
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    volumes:
+      - ./db:/scripts:ro
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        set -e
+        SQLCMD="/opt/mssql-tools18/bin/sqlcmd -C -S db -U sa -P $$MSSQL_SA_PASSWORD"
+        echo "Ensuring database MO_ASHRAF exists..."
+        $$SQLCMD -Q "IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = 'MO_ASHRAF') CREATE DATABASE [MO_ASHRAF];"
+
+        # The db healthcheck only proves master answers - it does NOT mean
+        # MO_ASHRAF is usable. On any restart where the volume already holds
+        # data, SQL Server has to roll transactions forward, and until that
+        # finishes connecting with `-d MO_ASHRAF` fails with "Cannot open
+        # database ... The login failed" - which reads like a credentials
+        # problem and is not one. Wait for the database itself.
+        echo "Waiting for MO_ASHRAF to come online..."
+        for i in $$(seq 1 60); do
+          if $$SQLCMD -d MO_ASHRAF -Q "SELECT 1" -b -o /dev/null 2>/dev/null; then
+            echo "MO_ASHRAF is online."
+            break
+          fi
+          if [ "$$i" = "60" ]; then
+            echo "MO_ASHRAF did not come online in time." >&2
+            exit 1
+          fi
+          sleep 2
+        done
+
+        for f in /scripts/01_Schema.sql /scripts/02_Demo_Data.sql /scripts/03_Alert_Rules.sql; do
+          echo "Applying $$f ..."
+          $$SQLCMD -f 65001 -I -d MO_ASHRAF -i "$$f"
+        done
+
+        # Rules exist after 03_Alert_Rules.sql, but nothing has evaluated
+        # them yet - the alerts dashboard would show zero until someone
+        # clicks "Run Evaluation". Running it once here means a fresh
+        # `docker compose up` shows real alerts immediately. Safe to run
+        # again on every restart: the engine is idempotent either way.
+        echo "Running initial alert evaluation..."
+        $$SQLCMD -d MO_ASHRAF -Q "EXEC dbo.usp_EvaluateAlertRules;"
+
+        echo "Database ready."
+
   api:
     build:
       context: .
       dockerfile: api/Dockerfile
-    ports:
-      - "5228:8080"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
     environment:
-      # SQL Server itself stays on the host (not containerized) - the
-      # container reaches it over TCP via host.docker.internal using the
-      # bi_task2_docker SQL login, since Windows Integrated auth isn't
-      # available from inside a Linux container.
-      ConnectionStrings__DefaultConnection: "Server=host.docker.internal,1433;Database=MO_ASHRAF;User Id=bi_task2_docker;Password=${DB_PASSWORD};TrustServerCertificate=True;"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=MO_ASHRAF;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;"
+    ports:
+      - "5228:5228"
+    volumes:
+      - ./api:/src/api
+      - ./Packages:/src/Packages:ro
+      # Named volumes for bin/obj: a Windows-built bin/obj bind-mounted into
+      # a Linux container (or vice versa) is native-code-incompatible and
+      # will not run. Keeping these container-only lets ./api sync live for
+      # source while build output stays whatever platform the container is.
+      - api_bin:/src/api/bin
+      - api_obj:/src/api/obj
 
   app:
     build:
       context: .
       dockerfile: app/Dockerfile
+    # No API_BASE_URL wiring needed here: BI-Grid calls the API directly
+    # from the browser using the constant in app/src/app/core/api.ts. The
+    # browser runs on the host, so it reaches localhost:5228 through the
+    # published port below exactly as it does outside Docker.
     ports:
-      - "4200:80"
-    depends_on:
-      - api
+      - "4200:4200"
+    volumes:
+      - ./app:/src/app
+      - ./Packages:/src/Packages:ro
+      # Same reasoning as api_bin/api_obj: node_modules has native (sass,
+      # esbuild) binaries. Keep it container-native, not host-synced.
+      - app_node_modules:/src/app/node_modules
+      # .angular/cache holds Vite's pre-bundled dependency chunks, keyed to a
+      # hash of node_modules. If this were bind-mounted, it would carry over
+      # whatever cache the host's own `npm run start` produced against a
+      # DIFFERENT node_modules install - Vite detects the mismatch and falls
+      # back to a full "Re-optimizing dependencies" pass (multiple minutes)
+      # on every container start. A named volume keeps the cache paired with
+      # the container's own node_modules, so it stays valid across restarts.
+      - app_angular_cache:/src/app/.angular
+
+volumes:
+  mssql_data:
+  api_bin:
+  api_obj:
+  app_node_modules:
+  app_angular_cache:

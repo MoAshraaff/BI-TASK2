@@ -1,0 +1,7 @@
+<svg id="chat_bubble_outline_black_24dp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+  <path id="Path_20" data-name="Path 20" d="M0,0H24V24H0Z" fill="none"/>
+  <g id="forum_black_24dp">
+    <path id="Path_4731" data-name="Path 4731" d="M0,0H24V24H0Z" fill="none"/>
+    <path id="Path_4732" data-name="Path 4732" d="M21,6H19v9H6v2a1,1,0,0,0,1,1H18l4,4V7A1,1,0,0,0,21,6Zm-4,6V3a1,1,0,0,0-1-1H3A1,1,0,0,0,2,3V17l4-4H16A1,1,0,0,0,17,12Z" fill="#8898ad"/>
+  </g>
+</svg>

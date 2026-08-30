@@ -1,0 +1,10 @@
+<svg id="report_icons" data-name="report icons" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+  <g id="Group_5780" data-name="Group 5780">
+    <path id="Path_4406" data-name="Path 4406" d="M0,0H24V24H0Z" fill="none"/>
+  </g>
+  <g id="Group_5782" data-name="Group 5782">
+    <g id="Group_5781" data-name="Group 5781">
+      <path id="Path_4407" data-name="Path 4407" d="M15,3H5A2,2,0,0,0,3.01,5L3,19a2,2,0,0,0,1.99,2H19a2.006,2.006,0,0,0,2-2V9ZM8,17a1,1,0,1,1,1-1A1,1,0,0,1,8,17Zm0-4a1,1,0,1,1,1-1A1,1,0,0,1,8,13ZM8,9A1,1,0,1,1,9,8,1,1,0,0,1,8,9Zm6,1V4.5L19.5,10Z" fill="#c0401a"/>
+    </g>
+  </g>
+</svg>

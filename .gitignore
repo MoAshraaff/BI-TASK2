@@ -1,31 +1,14 @@
-# Frontend (Angular)
-app/node_modules/
-app/dist/
-app/.angular/
-
-# Backend (.NET)
-api/bin/
-api/obj/
-
-# Proprietary SalesBuzz SDK packages - supplied out-of-band, not for public
-# distribution. See CLAUDE.md for how to obtain these on a fresh checkout.
-Packages/
-
-# Docker env (holds the local SQL login password)
+# .env holds the local SQL Server sa password used by docker-compose.
+# Local dev credential, but still a credential - keep it out of the repo.
 .env
 
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
+# Build output / dependencies - all reproducible.
+node_modules/
+dist/
+.angular/
+bin/
+obj/
 
-# Claude Code runtime state
-.claude/scheduled_tasks.lock
-
-# Editors
-.vs/
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# Packages/ is deliberately NOT ignored: the SalesBuzz npm .tgz files and the
+# BI-SDK .nupkg are not on any public registry, so the repo is the only place
+# they exist. Removing them breaks every install path, host and container.

@@ -1,0 +1,14 @@
+<svg id="Fleet_Integration" data-name="Fleet Integration" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+  <g id="Group_6880" data-name="Group 6880" transform="translate(18527 6286)">
+    <rect id="Rectangle_3132" data-name="Rectangle 3132" width="20" height="20" transform="translate(-18527 -6286)" fill="none"/>
+    <rect id="Rectangle_3133" data-name="Rectangle 3133" width="18" height="18" transform="translate(-18524 -6283)" fill="none"/>
+  </g>
+  <g id="cargo-truck" transform="translate(4 -105.204)">
+    <g id="Group_6865" data-name="Group 6865" transform="translate(0 112.204)">
+      <path id="Path_4702" data-name="Path 4702" d="M454.325,395.756a1.445,1.445,0,1,0,1.445,1.445A1.447,1.447,0,0,0,454.325,395.756Zm0,1.87a.425.425,0,1,1,.425-.425A.425.425,0,0,1,454.325,397.626Z" transform="translate(-440.3 -387.88)" fill="#3688fc"/>
+      <path id="Path_4703" data-name="Path 4703" d="M400.637,179.518h-2.5a.34.34,0,0,0-.34.34v6.63a.34.34,0,0,0,.34.34h.361a.339.339,0,0,0,.339-.288,1.959,1.959,0,0,1,3.871,0,.339.339,0,0,0,.339.288h.36a.34.34,0,0,0,.34-.34v-3.315a.339.339,0,0,0-.079-.218L400.9,179.64A.34.34,0,0,0,400.637,179.518Zm-2.157,2.72v-1.7a.34.34,0,0,1,.34-.34h1.5a.34.34,0,0,1,.261.122l1.417,1.7a.34.34,0,0,1-.261.558H398.82A.34.34,0,0,1,398.48,182.238Z" transform="translate(-386.75 -177.648)" fill="#3688fc"/>
+      <path id="Path_4704" data-name="Path 4704" d="M.34,121.384h.871a.339.339,0,0,0,.339-.288,1.874,1.874,0,0,1,1.935-1.656A1.874,1.874,0,0,1,5.421,121.1a.339.339,0,0,0,.339.288h4.27a.34.34,0,0,0,.34-.34v-8.5a.34.34,0,0,0-.34-.34H.34a.34.34,0,0,0-.34.34v8.5A.34.34,0,0,0,.34,121.384Z" transform="translate(0 -112.204)" fill="#3688fc"/>
+      <path id="Path_4705" data-name="Path 4705" d="M74.885,395.756A1.445,1.445,0,1,0,76.33,397.2,1.447,1.447,0,0,0,74.885,395.756Zm0,1.87a.425.425,0,1,1,.425-.425A.425.425,0,0,1,74.885,397.626Z" transform="translate(-71.4 -387.88)" fill="#3688fc"/>
+    </g>
+  </g>
+</svg>
